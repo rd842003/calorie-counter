@@ -1,0 +1,35 @@
+@startuml
+title Calorie Counter - Implemented Classes (A6)
+
+class LogService {
+  +todayEntries(): List<LogEntry>
+  +todayTotals(): Map
+  +lastNDays(days): List<LogEntry>
+  +addQuick(...)
+}
+
+class LogEntry {
+  -Long id
+  -LocalDate date
+  -String description
+  -int calories
+  -int protein
+  -int carbs
+  -int fat
+  -MealType mealType
+}
+
+enum MealType { BREAKFAST; LUNCH; DINNER; SNACKS }
+
+interface LogEntryRepository
+
+class DashboardController
+class AddController
+class HistoryController
+
+LogEntryRepository <|.. JpaRepository
+LogService --> LogEntryRepository
+DashboardController --> LogService
+AddController --> LogService
+HistoryController --> LogService
+@enduml

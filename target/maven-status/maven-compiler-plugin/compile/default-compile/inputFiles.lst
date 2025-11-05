@@ -1,0 +1,9 @@
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\Application.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\config\DataLoader.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\domain\LogEntry.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\domain\MealType.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\repo\LogEntryRepository.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\service\LogService.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\web\AddController.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\web\DashboardController.java
+C:\Users\rd842\Downloads\calorie-counter-a6-8080\src\main\java\edu\csu\caloriecounter\web\HistoryController.java

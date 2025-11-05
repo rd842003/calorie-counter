@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><title>Add Food</title>
+<style>
+:root { --primary:#2f80ed; --bg:#f6f8fb; --card:#ffffff; --muted:#eef3f7; --accent:#2dd4bf; }
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);margin:0;}
+.header{background:var(--primary);color:#fff;padding:16px 24px;border-radius:12px;margin:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.container{padding:16px 24px;}
+.card{background:var(--card);border-radius:16px;padding:16px 20px;box-shadow:0 6px 14px rgba(0,0,0,.12);margin:12px 0;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn{border:none;border-radius:12px;padding:12px 18px;box-shadow:0 4px 10px rgba(0,0,0,.1);cursor:pointer;}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-muted{background:var(--muted);}
+.footer{ text-align:center; padding:12px; color:#777;}
+.progress{height:10px; background:#e5e7eb; border-radius:10px; position:relative; overflow:hidden;}
+.progress .bar{ position:absolute; top:0; left:0; height:100%; background:var(--accent); width:0;}
+.small{color:#6b7280;font-size:12px;}
+.nav a{margin-left:8px; color:#1f2937; text-decoration:none;}
+label{display:block;margin:8px 0 4px;}
+input,select{width:100%; padding:10px;border-radius:10px;border:1px solid #e5e7eb;}
+form .grid{grid-template-columns:repeat(5,1fr);gap:8px; align-items:end;}
+table{width:100%; border-collapse:collapse;}
+th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div style="font-size:24px;font-weight:700">Add Food</div>
+    <div class="small">Choose Search or Quick Add</div>
+  </div>
+  <div class="nav">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/add">Add Food</a>
+    <a href="/history">History</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="grid">
+    <div class="card" style="text-align:center">Search Foods (placeholder)</div>
+    <div class="card">
+      <div style="font-weight:600">Quick Add</div>
+      <form method="post" action="/quick-add">
+         <div class="grid">
+            <div>
+              <label>Description</label>
+              <input name="description" placeholder="e.g., Fairlife Protein Shake" required>
+            </div>
+            <div>
+              <label>Calories</label>
+              <input type="number" name="calories" min="0" required>
+            </div>
+            <div>
+              <label>Protein (g)</label>
+              <input type="number" name="protein" min="0" value="0">
+            </div>
+            <div>
+              <label>Carbs (g)</label>
+              <input type="number" name="carbs" min="0" value="0">
+            </div>
+            <div>
+              <label>Fat (g)</label>
+              <input type="number" name="fat" min="0" value="0">
+            </div>
+         </div>
+         <label>Meal</label>
+         <select name="mealType">
+            <option>BREAKFAST</option>
+            <option>LUNCH</option>
+            <option>DINNER</option>
+            <option>SNACKS</option>
+         </select>
+         <div style="margin-top:12px"><button class="btn btn-primary" type="submit">Add</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="footer small">Assignment 6</div>
+</body>
+</html>
