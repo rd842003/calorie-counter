@@ -1,158 +1,44 @@
-# Calorie Counter — Assignment 6 (Spring Boot 3.3.3)
+# Calorie Counter
 
-This repo contains a minimal, runnable prototype for the A6 demo:
-- Spring Boot 3.3.3, Thymeleaf, Spring Data JPA, H2 (in‑memory)
-- Pages: **Dashboard** (`/dashboard`), **Add Food** (`/add`), **History** (`/history`)
-- Default port: **8080**
+Team: Robert Daniel, Mekaila Cummings, Erik Jasso
 
----
+## Project Summary
+The Calorie Counter App is a Java 17 desktop application that helps users track daily food intake and monitor calories without requiring a database. It uses JavaFX for its graphical user interface and Apache POI for Excel-based data storage, making it portable and easy to maintain.
 
-## ✅ Quick Start (one command)
+## Main Goals
+1. Allow users to log foods manually or import them from Excel.
+2. Group foods into meals (Breakfast/Lunch/Dinner) and compute totals automatically.
+3. Display daily calorie totals and progress toward a goal.
+4. Support undo/redo for add/remove actions.
+5. Export daily reports in multiple formats (CSV/JSON).
 
-**Recommended:** use the **Maven Wrapper** so teammates don’t need Maven installed.
+## Functional Requirements
+- Track foods, meals, calories, and macros.
+- Persist data in Excel sheets (Users, Foods, Entries, Goals).
+- Use Observer pattern to update dashboard automatically.
+- Use Factory to create food objects from Excel rows.
+- Use Command to implement undo/redo for entries.
+- Use Singleton for global Settings Manager.
+- Ensure execution on Windows without extra installation.
 
-From the repo root run **ONE** of the following:
-```bash
-# Unix/macOS
-./mvnw spring-boot:run
-# Windows PowerShell/CMD
-mvnw spring-boot:run
-```
+## Non-Functional Requirements
+- Portable: uses Excel storage instead of database.
+- Modular, pattern-driven design for maintainability.
+- GUI responsiveness < 300 ms for log updates.
+- Code readability and maintainability with logging (SLF4J/Logback).
 
-> If `mvnw` files are not in the repo yet, run once (maintainer):
-> ```bash
-> mvn -N wrapper:wrapper -Dmaven=3.9.9
-> git add mvnw mvnw.cmd .mvn/wrapper/*
-> git commit -m "Add Maven Wrapper"
-> ```
+## Epics & Patterns
+- Epic A — Daily Tracking & Meals (Composite)
+- Epic B — Entry Log & Browsing (Iterator)
+- Epic C — Goals & Feedback (Observer)
+- Epic D — Undo/Redo & Safety (Command)
+- Epic E — Reports & Export (Template Method + Hook)
+- Epic F — Catalog & Creation (Factory)
+- Epic G — Preferences & Startup (Singleton)
+- Epic H — Search & Quality of Life
 
-Then browse: http://localhost:8080
-
----
-
-## 📦 Requirements
-
-- **Java 17+** (Java 21 recommended).  
-  Check:
-  ```bash
-  java -version
-  ```
-  Expect something like `21.0.x`. If you see `1.8.x`, update your default Java.
-
-- **No global Maven needed** when using `mvnw`. If you prefer Maven:
-  - Maven **3.9+** is fine: `mvn -version`
-
----
-
-## 🧰 VS Code setup (optional but helpful)
-
-1. Install extensions:
-   - *Extension Pack for Java*
-   - *Spring Boot Extension Pack*
-
-2. Ensure VS Code uses JDK 17+:
-   - Command Palette → **Java: Configure Java Runtime** → set your JDK 21 as default
-   - Or add `.vscode/settings.json` (see below)
-
-**Launch config** (green Run button):
-```jsonc
-// .vscode/launch.json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "Spring Boot - Calorie Counter",
-      "request": "launch",
-      "mainClass": "edu.csu.caloriecounter.Application",
-      "projectName": "calorie-counter"
-    }
-  ]
-}
-```
-
-**Settings** (forces JDK 21 and uses it for Maven too):
-```jsonc
-// .vscode/settings.json
-{
-  "java.configuration.runtimes": [
-    { "name": "JavaSE-21", "path": "C:\\Program Files\\Java\\jdk-21", "default": true }
-  ],
-  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-21",
-  "maven.terminal.useJavaHome": true
-}
-```
-
----
-
-## 🚀 Commands
-
-```bash
-# run
-./mvnw spring-boot:run
-
-# clean & rebuild
-./mvnw clean package
-
-# run on a different port
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
-```
-
-H2 Console: http://localhost:8080/h2-console  
-JDBC URL: `jdbc:h2:mem:caldb`
-
----
-
-## 🧩 Common issues
-
-### 1) “class file version 61.0” or similar
-You’re using **Java 8**. Switch default Java to 17+ (21 recommended).
-- `java -version` should show `17` or `21`.
-- On Windows/VS Code, set JDK 21 under **Java: Configure Java Runtime**.
-
-### 2) “Port 8080 already in use”
-Run on a different port:
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
-```
-Or free the port (Windows):
-```powershell
-netstat -ano | findstr :8080
-tasklist /FI "PID eq <PID>"
-taskkill /PID <PID> /F
-```
-
-### 3) Whitelabel 500 on Dashboard
-Already fixed: controller precomputes `percent`; views avoid method calls.
-
----
-
-## 🧪 Environment check scripts (optional)
-
-We provide simple scripts to verify Java, Maven/Wrapper, and port status:
-
-- `scripts/env-check.ps1` (Windows PowerShell)
-- `scripts/env-check.sh` (macOS/Linux)
-
-Run them from repo root; they will print helpful hints.
-
----
-
-## 📁 Layout
-
-```
-src/main/java/edu/csu/caloriecounter/...
-src/main/resources/templates/
-src/main/resources/application.properties
-docs/class-diagram.puml
-```
-
----
-
-## 🙋 Help
-Include this in bug reports:
-```
-java -version
-./mvnw -version
-git rev-parse --short HEAD
-``` 
+## Build & Run
+- Java 17+
+- Maven:
+  - Build: `mvn clean package`
+  - Run (JavaFX plugin): `mvn javafx:run`
