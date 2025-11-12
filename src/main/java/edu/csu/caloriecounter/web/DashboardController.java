@@ -8,11 +8,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller for dashboard endpoints. Gathers today's totals and entries and exposes simple goals
+ * used by the Thymeleaf dashboard view.
+ */
 @Controller
 public class DashboardController {
     private final LogService service;
     public DashboardController(LogService service) { this.service = service; }
 
+    /**
+     * Show the dashboard view and attach totals, entries and simple nutrition goals to the model.
+     *
+     * @param model MVC model used by the view template
+     * @return the dashboard view name
+     */
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         Map<String,Integer> totals = service.todayTotals();
