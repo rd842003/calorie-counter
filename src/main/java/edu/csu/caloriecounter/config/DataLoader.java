@@ -12,12 +12,12 @@ import java.util.Random;
 /**
  * Configuration class that seeds example LogEntry data into the application repository at startup.
  *
- * <p>The {@link #seed(LogEntryRepository)} method registers a {@link CommandLineRunner} bean that
+ * The {@link #seed(LogEntryRepository)} method registers a {@link CommandLineRunner} bean that
  * inserts a few explicit meal entries for the current day and a series of deterministic daily totals
  * for the previous 14 days. This class is intended to provide a small dataset for local development
  * and demonstration purposes.
  *
- * <p>Patterns Used So Far:
+ * Patterns Used So Far:
  * - MVC (Spring): Controllers ↔ Service ↔ Views (Thymeleaf)
  * - Repository (DAO): JPA repository for LogEntry
  * - Singleton (via Spring): beans are container-scoped singletons

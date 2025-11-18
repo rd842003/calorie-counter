@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * Controller responsible for the add/quick-add UI endpoints.
  *
- * <p>Provides the add form view and handles quick-add POSTs that create an entry for today using
+ * Provides the add form view and handles quick-add POSTs that create an entry for today using
  * the {@link LogService#addQuick} helper.
  */
 @Controller

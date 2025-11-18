@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Repository (DAO) interface for {@link LogEntry} persistence operations.
  *
- * <p>Extends Spring Data JPA's {@link JpaRepository} to inherit common CRUD operations and
+ * Extends Spring Data JPA's {@link JpaRepository} to inherit common CRUD operations and
  * defines a few query methods used by the application service layer.
  */
 public interface LogEntryRepository extends JpaRepository<LogEntry, Long> {

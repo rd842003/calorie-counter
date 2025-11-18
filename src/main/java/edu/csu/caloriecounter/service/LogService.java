@@ -9,11 +9,11 @@ import java.util.*;
 /**
  * Service layer responsible for retrieving and aggregating LogEntry data.
  *
- * <p>This class centralizes calculation logic (totals, ranges) so controllers remain thin and focus
+ * This class centralizes calculation logic (totals, ranges) so controllers remain thin and focus
  * on request/response handling. This centralization also serves as an extension point for applying
  * alternate calculation strategies in the future.
  *
- * <p>Patterns Used So Far:
+ * Patterns Used So Far:
  * - MVC (Spring): Controllers ↔ Service ↔ Views (Thymeleaf)
  * - Repository (DAO): JPA repository for LogEntry
  * - Singleton (via Spring): this service is a container-scoped singleton

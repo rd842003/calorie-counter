@@ -6,10 +6,10 @@ import java.time.LocalDate;
 /**
  * JPA entity representing a single logged entry of food or a daily total.
  *
- * <p>Fields capture the date, a description of the entry, macronutrient totals (calories, protein,
+ * Fields capture the date, a description of the entry, macronutrient totals (calories, protein,
  * carbs, fat) and the {@link MealType} classification for the entry.
  *
- * <p>Instances are persisted via a JPA {@code Entity} annotation and use an auto-generated identity id.
+ * Instances are persisted via a JPA {@code Entity} annotation and use an auto-generated identity id.
  */
 @Entity
 public class LogEntry {

@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Application bootstrap for the Calorie Counter Spring Boot application.
  *
- * <p>Starts the Spring container and initializes Spring MVC components (controllers, services, repositories).
+ * Starts the Spring container and initializes Spring MVC components (controllers, services, repositories).
  * This class is the entry point used by the executable JAR and by IDE runs.
  *
- * <p>Patterns Used So Far:
+ * Patterns Used So Far:
  * - MVC (Spring): Controllers ↔ Service ↔ Views (Thymeleaf)
  * - Repository (DAO): JPA repository for LogEntry
  * - Singleton (via Spring): beans are container-scoped singletons

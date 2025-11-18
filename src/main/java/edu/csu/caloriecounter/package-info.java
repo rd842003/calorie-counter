@@ -1,7 +1,7 @@
 /**
  * Top-level package for the Calorie Counter application.
  *
- * <p>This package contains the application bootstrap, configuration classes, domain objects,
+ * This package contains the application bootstrap, configuration classes, domain objects,
  * repositories, services, and web controllers used by the Calorie Counter demo application.
  *
  * Patterns Used So Far:
