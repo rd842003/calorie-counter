@@ -1,8 +1,10 @@
 package edu.csu.caloriecounter.config;
 
+import edu.csu.caloriecounter.domain.FoodItem;
 import edu.csu.caloriecounter.domain.LogEntry;
 import edu.csu.caloriecounter.domain.MealType;
 import edu.csu.caloriecounter.repo.LogEntryRepository;
+import edu.csu.caloriecounter.service.FoodCatalogService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +14,11 @@ import java.util.Random;
 /**
  * Configuration class that seeds example LogEntry data into the application repository at startup.
  *
- * The {@link #seed(LogEntryRepository)} method registers a {@link CommandLineRunner} bean that
- * inserts a few explicit meal entries for the current day and a series of deterministic daily totals
- * for the previous 14 days. This class is intended to provide a small dataset for local development
- * and demonstration purposes.
+ * <p>The {@link #seed(LogEntryRepository, FoodCatalogService)} method registers a
+ * {@link CommandLineRunner} bean that inserts a handful of entries for the current day using
+ * the food catalog loaded from the Excel workbook. It also creates deterministic daily totals for
+ * the previous 14 days. This class is intended to provide a small dataset for local development and
+ * demonstration purposes while avoiding hard-coded meal descriptions.</p>
  *
  * Patterns Used So Far:
  * - MVC (Spring): Controllers ↔ Service ↔ Views (Thymeleaf)
@@ -29,15 +32,17 @@ public class DataLoader {
      * Creates a CommandLineRunner bean that seeds sample LogEntry objects into the provided repository.
      *
      * @param repo the repository used to persist LogEntry instances
+     * @param catalogService catalog providing preset food options sourced from Excel
      * @return a CommandLineRunner that inserts sample data on application startup
      */
     @Bean
-    CommandLineRunner seed(LogEntryRepository repo) {
+    CommandLineRunner seed(LogEntryRepository repo, FoodCatalogService catalogService) {
         return args -> {
-            // Seed explicit example entries for the current day
-            repo.save(new LogEntry(LocalDate.now(), "Fairlife Protein Shake", 150, 30, 6, 2, MealType.BREAKFAST));
-            repo.save(new LogEntry(LocalDate.now(), "Banana", 105, 1, 27, 0, MealType.SNACKS));
-            repo.save(new LogEntry(LocalDate.now(), "Chicken Breast (100g)", 165, 31, 0, 4, MealType.DINNER));
+            // Seed entries for the current day based on the Excel catalog (when available)
+            catalogService.getCatalog().stream()
+                .limit(3)
+                .forEach(item -> repo.save(new LogEntry(LocalDate.now(), item.getDescription(), item.getCalories(),
+                    item.getProtein(), item.getCarbs(), item.getFat(), item.getMealType())));
 
             // Deterministic pseudo-random daily totals for the previous 14 days to provide sample history
             Random r = new Random(42);
