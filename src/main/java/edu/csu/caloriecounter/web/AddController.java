@@ -1,5 +1,6 @@
 package edu.csu.caloriecounter.web;
 
+import edu.csu.caloriecounter.service.FoodCatalogService;
 import edu.csu.caloriecounter.service.LogService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,13 +11,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * Controller responsible for the add/quick-add UI endpoints.
  *
- * Provides the add form view and handles quick-add POSTs that create an entry for today using
- * the {@link LogService#addQuick} helper.
+ * <p>Provides the add form view, including preset food selections sourced from the Excel catalog,
+ * and handles quick-add POSTs that create an entry for today using the
+ * {@link LogService#addQuick} helper.</p>
  */
 @Controller
 public class AddController {
     private final LogService service;
-    public AddController(LogService service) { this.service = service; }
+    private final FoodCatalogService catalogService;
+
+    public AddController(LogService service, FoodCatalogService catalogService) {
+        this.service = service;
+        this.catalogService = catalogService;
+    }
 
     /**
      * Display the add view.
@@ -25,7 +32,10 @@ public class AddController {
      * @return the view name ("add")
      */
     @GetMapping("/add")
-    public String add(Model model) { return "add"; }
+    public String add(Model model) {
+        model.addAttribute("foods", catalogService.getCatalog());
+        return "add";
+    }
 
     /**
      * Handle quick add submissions from the add form and redirect back to the dashboard.
