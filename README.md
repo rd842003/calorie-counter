@@ -145,6 +145,7 @@ src/main/java/edu/csu/caloriecounter/...
 src/main/resources/templates/
 src/main/resources/application.properties
 docs/class-diagram.puml
+docs/food-catalog.xlsx (food presets loaded by the app)
 ```
 
 ---

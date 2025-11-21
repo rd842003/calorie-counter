@@ -1,6 +1,7 @@
 package edu.csu.caloriecounter.service;
 
 import edu.csu.caloriecounter.domain.LogEntry;
+import edu.csu.caloriecounter.domain.MealType;
 import edu.csu.caloriecounter.repo.LogEntryRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -70,12 +71,13 @@ public class LogService {
     /**
      * Retrieve entries for the last N days (inclusive of today).
      *
-     * @param days number of days to include (must be >= 1)
+     * @param days number of days to include (values less than 1 are treated as 1)
      * @return list of entries from start..end ordered by date descending
      */
     public List<LogEntry> lastNDays(int days) {
+        int safeDays = Math.max(days, 1);
         LocalDate end = LocalDate.now();
-        LocalDate start = end.minusDays(days-1);
+        LocalDate start = end.minusDays(safeDays - 1);
         return repo.findByDateBetweenOrderByDateDesc(start, end);
     }
 
@@ -87,11 +89,17 @@ public class LogService {
      * @param protein protein grams
      * @param carbs carbohydrate grams
      * @param fat fat grams
-     * @param mealType string name of the MealType enum
+     * @param mealType string name of the MealType enum; invalid values default to {@link MealType#SNACKS}
      */
     public void addQuick(String desc, int calories, int protein, int carbs, int fat, String mealType) {
-        edu.csu.caloriecounter.domain.MealType mt =
-            edu.csu.caloriecounter.domain.MealType.valueOf(mealType);
+        String normalized = mealType == null ? MealType.SNACKS.name() : mealType.trim().toUpperCase(Locale.ROOT);
+        MealType mt;
+        try {
+            mt = MealType.valueOf(normalized);
+        } catch (IllegalArgumentException ex) {
+            mt = MealType.SNACKS;
+        }
+
         repo.save(new LogEntry(LocalDate.now(), desc, calories, protein, carbs, fat, mt));
     }
 }
