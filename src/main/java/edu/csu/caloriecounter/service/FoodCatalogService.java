@@ -3,28 +3,37 @@ package edu.csu.caloriecounter.service;
 import edu.csu.caloriecounter.domain.FoodItem;
 import edu.csu.caloriecounter.domain.MealType;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
  * Loads a catalog of foods from an Excel workbook and exposes them for UI pre-fill options.
  *
- * <p>The workbook is expected at {@value #CATALOG_RESOURCE} on the classpath with a header row
- * containing the following columns: {@code Description}, {@code Calories}, {@code Protein},
- * {@code Carbs}, {@code Fat}, and {@code MealType}. Each subsequent row is converted into a
- * {@link FoodItem} instance.</p>
+ * <p>The workbook is searched for in {@value #DOCS_RESOURCE} first (to make the spreadsheet easy to
+ * find and edit). If it is not present there, the service falls back to {@value #CLASSPATH_RESOURCE}
+ * on the classpath. The sheet must contain a header row with the columns {@code Description},
+ * {@code Calories}, {@code Protein}, {@code Carbs}, {@code Fat}, and {@code MealType}. Each
+ * subsequent row is converted into a {@link FoodItem} instance.</p>
  */
 @Service
 public class FoodCatalogService {
     private static final Logger log = LoggerFactory.getLogger(FoodCatalogService.class);
-    private static final String CATALOG_RESOURCE = "data/food-catalog.xlsx";
+    private static final String DOCS_RESOURCE = "docs/food-catalog.xlsx";
+    private static final String CLASSPATH_RESOURCE = "data/food-catalog.xlsx";
+    private static final String DEFAULT_SHEET_NAME = "Foods";
 
     private final List<FoodItem> catalog = new ArrayList<>();
 
@@ -33,23 +42,23 @@ public class FoodCatalogService {
      */
     @PostConstruct
     public void loadCatalog() {
-        ClassPathResource resource = new ClassPathResource(CATALOG_RESOURCE);
-        if (!resource.exists()) {
-            log.warn("Food catalog resource '{}' was not found; preset options will be empty", CATALOG_RESOURCE);
+        Resource resource = resolveCatalogResource();
+        if (resource == null) {
+            log.warn("No food catalog found in '{}' or classpath resource '{}'", DOCS_RESOURCE, CLASSPATH_RESOURCE);
             return;
         }
 
         try (InputStream in = resource.getInputStream(); Workbook workbook = WorkbookFactory.create(in)) {
             Sheet sheet = workbook.getSheetAt(0);
             if (sheet == null) {
-                log.warn("Catalog workbook '{}' contained no sheets", CATALOG_RESOURCE);
+                log.warn("Catalog workbook '{}' contained no sheets", resource.getDescription());
                 return;
             }
 
             Row header = sheet.getRow(0);
             Map<String, Integer> columns = resolveColumns(header);
             if (columns.isEmpty()) {
-                log.warn("Catalog workbook '{}' does not contain the expected headers", CATALOG_RESOURCE);
+                log.warn("Catalog workbook '{}' does not contain the expected headers", resource.getDescription());
                 return;
             }
 
@@ -79,9 +88,9 @@ public class FoodCatalogService {
                 catalog.add(new FoodItem(description, calories, protein, carbs, fat, mealType));
             }
 
-            log.info("Loaded {} preset foods from {}", catalog.size(), CATALOG_RESOURCE);
+            log.info("Loaded {} preset foods from {}", catalog.size(), resource.getDescription());
         } catch (IOException e) {
-            log.error("Failed to read food catalog {}", CATALOG_RESOURCE, e);
+            log.error("Failed to read food catalog {}", resource.getDescription(), e);
         }
     }
 
@@ -90,6 +99,93 @@ public class FoodCatalogService {
      */
     public List<FoodItem> getCatalog() {
         return Collections.unmodifiableList(catalog);
+    }
+
+    /**
+     * Append a new food to the in-memory catalog and persist it to the Excel workbook on disk.
+     *
+     * <p>The append is skipped when the description already exists (case-insensitive) to avoid
+     * duplicating rows in the spreadsheet.</p>
+     *
+     * @param item the food to append
+     */
+    public synchronized void addToCatalog(FoodItem item) {
+        boolean exists = catalog.stream()
+            .anyMatch(existing -> existing.getDescription().equalsIgnoreCase(item.getDescription()));
+        if (exists) {
+            return;
+        }
+
+        Path docsPath = Path.of(DOCS_RESOURCE);
+        try (Workbook workbook = openWorkbook(docsPath)) {
+            Sheet sheet = workbook.getNumberOfSheets() > 0 ? workbook.getSheetAt(0) : workbook.createSheet(DEFAULT_SHEET_NAME);
+            ensureHeader(sheet);
+
+            int rowIndex = sheet.getLastRowNum() + 1;
+            Row row = sheet.createRow(rowIndex);
+            row.createCell(0).setCellValue(item.getDescription());
+            row.createCell(1).setCellValue(item.getCalories());
+            row.createCell(2).setCellValue(item.getProtein());
+            row.createCell(3).setCellValue(item.getCarbs());
+            row.createCell(4).setCellValue(item.getFat());
+            row.createCell(5).setCellValue(item.getMealType().name());
+
+            try (OutputStream out = Files.newOutputStream(docsPath)) {
+                workbook.write(out);
+                catalog.add(item);
+                log.info("Appended '{}' to food catalog {}", item.getDescription(), docsPath.toAbsolutePath());
+            }
+        } catch (IOException e) {
+            log.error("Failed to append food '{}' to catalog {}", item.getDescription(), docsPath.toAbsolutePath(), e);
+        }
+    }
+
+    private Workbook openWorkbook(Path docsPath) throws IOException {
+        if (Files.exists(docsPath)) {
+            try (InputStream in = Files.newInputStream(docsPath)) {
+                return WorkbookFactory.create(in);
+            }
+        }
+
+        if (docsPath.getParent() != null) {
+            Files.createDirectories(docsPath.getParent());
+        }
+
+        Workbook workbook = new XSSFWorkbook();
+        workbook.createSheet(DEFAULT_SHEET_NAME);
+        return workbook;
+    }
+
+    private void ensureHeader(Sheet sheet) {
+        Row header = sheet.getRow(0);
+        if (header != null && header.getPhysicalNumberOfCells() > 0) {
+            return;
+        }
+
+        if (header == null) {
+            header = sheet.createRow(0);
+        }
+
+        header.createCell(0).setCellValue("Description");
+        header.createCell(1).setCellValue("Calories");
+        header.createCell(2).setCellValue("Protein");
+        header.createCell(3).setCellValue("Carbs");
+        header.createCell(4).setCellValue("Fat");
+        header.createCell(5).setCellValue("MealType");
+    }
+
+    private Resource resolveCatalogResource() {
+        Resource docsResource = new FileSystemResource(Path.of(DOCS_RESOURCE));
+        if (docsResource.exists()) {
+            return docsResource;
+        }
+
+        Resource classpathResource = new ClassPathResource(CLASSPATH_RESOURCE);
+        if (classpathResource.exists()) {
+            return classpathResource;
+        }
+
+        return null;
     }
 
     private Map<String, Integer> resolveColumns(Row header) {

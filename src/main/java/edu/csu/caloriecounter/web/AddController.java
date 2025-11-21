@@ -1,5 +1,7 @@
 package edu.csu.caloriecounter.web;
 
+import edu.csu.caloriecounter.domain.FoodItem;
+import edu.csu.caloriecounter.domain.MealType;
 import edu.csu.caloriecounter.service.FoodCatalogService;
 import edu.csu.caloriecounter.service.LogService;
 import org.springframework.stereotype.Controller;
@@ -7,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Locale;
 
 /**
  * Controller responsible for the add/quick-add UI endpoints.
@@ -55,7 +59,19 @@ public class AddController {
                            @RequestParam(defaultValue="0") int carbs,
                            @RequestParam(defaultValue="0") int fat,
                            @RequestParam(defaultValue="SNACKS") String mealType) {
+        MealType resolvedMealType = resolveMealType(mealType);
+
         service.addQuick(description, calories, protein, carbs, fat, mealType);
+        catalogService.addToCatalog(new FoodItem(description, calories, protein, carbs, fat, resolvedMealType));
         return "redirect:/dashboard";
+    }
+
+    private MealType resolveMealType(String mealType) {
+        String normalized = mealType == null ? MealType.SNACKS.name() : mealType.trim().toUpperCase(Locale.ROOT);
+        try {
+            return MealType.valueOf(normalized);
+        } catch (IllegalArgumentException ex) {
+            return MealType.SNACKS;
+        }
     }
 }
