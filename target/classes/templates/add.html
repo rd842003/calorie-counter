@@ -41,35 +41,48 @@ th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
     <div class="card" style="text-align:center">Search Foods (placeholder)</div>
     <div class="card">
       <div style="font-weight:600">Quick Add</div>
+      <div>
+        <label>Prefill from catalog</label>
+        <select id="presetSelect">
+          <option value="">Select a food...</option>
+          <option th:each="food : ${foods}" th:value="${food.description}"
+                  th:data-calories="${food.calories}"
+                  th:data-protein="${food.protein}"
+                  th:data-carbs="${food.carbs}"
+                  th:data-fat="${food.fat}"
+                  th:data-meal="${food.mealType}">[[${food.description}]]</option>
+        </select>
+      </div>
       <form method="post" action="/quick-add">
          <div class="grid">
             <div>
               <label>Description</label>
-              <input name="description" placeholder="e.g., Fairlife Protein Shake" required>
+              <input id="description" name="description" placeholder="Select a preset or type your own" required>
             </div>
             <div>
               <label>Calories</label>
-              <input type="number" name="calories" min="0" required>
+              <input id="calories" type="number" name="calories" min="0" required>
             </div>
             <div>
               <label>Protein (g)</label>
-              <input type="number" name="protein" min="0" value="0">
+              <input id="protein" type="number" name="protein" min="0" value="0">
             </div>
             <div>
               <label>Carbs (g)</label>
-              <input type="number" name="carbs" min="0" value="0">
+              <input id="carbs" type="number" name="carbs" min="0" value="0">
             </div>
             <div>
               <label>Fat (g)</label>
-              <input type="number" name="fat" min="0" value="0">
+              <input id="fat" type="number" name="fat" min="0" value="0">
             </div>
          </div>
          <label>Meal</label>
-         <select name="mealType">
+         <select id="mealType" name="mealType">
             <option>BREAKFAST</option>
             <option>LUNCH</option>
             <option>DINNER</option>
             <option>SNACKS</option>
+            <option>OTHER</option>
          </select>
          <div style="margin-top:12px"><button class="btn btn-primary" type="submit">Add</button></div>
       </form>
@@ -77,6 +90,32 @@ th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
   </div>
 </div>
 
-<div class="footer small">Assignment 6</div>
+<div class="footer small">Calorie Counter App</div>
+
+<script>
+  const presetSelect = document.getElementById('presetSelect');
+  const descriptionInput = document.getElementById('description');
+  const caloriesInput = document.getElementById('calories');
+  const proteinInput = document.getElementById('protein');
+  const carbsInput = document.getElementById('carbs');
+  const fatInput = document.getElementById('fat');
+  const mealTypeSelect = document.getElementById('mealType');
+
+  presetSelect.addEventListener('change', () => {
+    const option = presetSelect.selectedOptions[0];
+    if (!option || !option.value) {
+      return;
+    }
+
+    descriptionInput.value = option.value;
+    caloriesInput.value = option.dataset.calories || 0;
+    proteinInput.value = option.dataset.protein || 0;
+    carbsInput.value = option.dataset.carbs || 0;
+    fatInput.value = option.dataset.fat || 0;
+    if (option.dataset.meal) {
+      mealTypeSelect.value = option.dataset.meal;
+    }
+  });
+</script>
 </body>
 </html>
