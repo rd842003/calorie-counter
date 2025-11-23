@@ -9,22 +9,15 @@ This repo contains a minimal, runnable prototype for the A6 demo:
 
 ## ✅ Quick Start (one command)
 
-**Recommended:** use the **Maven Wrapper** so teammates don’t need Maven installed.
+This repo **does not include the Maven Wrapper**. Make sure Maven 3.9+ is installed and on your PATH.
 
 From the repo root run **ONE** of the following:
 ```bash
 # Unix/macOS
-./mvnw spring-boot:run
+mvn spring-boot:run
 # Windows PowerShell/CMD
-mvnw spring-boot:run
+mvn spring-boot:run
 ```
-
-> If `mvnw` files are not in the repo yet, run once (maintainer):
-> ```bash
-> mvn -N wrapper:wrapper -Dmaven=3.9.9
-> git add mvnw mvnw.cmd .mvn/wrapper/*
-> git commit -m "Add Maven Wrapper"
-> ```
 
 Then browse: http://localhost:8080
 
@@ -32,15 +25,14 @@ Then browse: http://localhost:8080
 
 ## 📦 Requirements
 
-- **Java 17+** (Java 21 recommended).  
+- **Java 17+** (Java 21 recommended).
   Check:
   ```bash
   java -version
   ```
   Expect something like `21.0.x`. If you see `1.8.x`, update your default Java.
 
-- **No global Maven needed** when using `mvnw`. If you prefer Maven:
-  - Maven **3.9+** is fine: `mvn -version`
+- **Maven 3.9+** installed and on PATH: `mvn -version`
 
 ---
 
@@ -89,31 +81,50 @@ Then browse: http://localhost:8080
 
 ```bash
 # run
-./mvnw spring-boot:run
+mvn spring-boot:run
 
 # clean & rebuild
-./mvnw clean package
+mvn clean package
 
 # run on a different port
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
 ```
 
-H2 Console: http://localhost:8080/h2-console  
+## 🧪 Tests
+
+This project uses **JUnit 5** with the Spring Boot test starter. To run the full suite:
+
+```bash
+# run all tests (recommended)
+mvn test
+
+# run a specific test class
+mvn -Dtest=LogServiceTest test
+```
+
+H2 Console: http://localhost:8080/h2-console
 JDBC URL: `jdbc:h2:mem:caldb`
 
 ---
 
 ## 🧩 Common issues
 
-### 1) “class file version 61.0” or similar
+### 1) “mvnw: command not found” or “mvnw is not recognized”
+This repo does not ship the Maven Wrapper scripts. Use `mvn` instead (Maven 3.9+ on PATH).
+If you want to add the wrapper locally:
+```bash
+mvn -N wrapper:wrapper -Dmaven=3.9.9
+```
+
+### 2) “class file version 61.0” or similar
 You’re using **Java 8**. Switch default Java to 17+ (21 recommended).
 - `java -version` should show `17` or `21`.
 - On Windows/VS Code, set JDK 21 under **Java: Configure Java Runtime**.
 
-### 2) “Port 8080 already in use”
+### 3) “Port 8080 already in use”
 Run on a different port:
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
 ```
 Or free the port (Windows):
 ```powershell
@@ -154,6 +165,6 @@ docs/food-catalog.xlsx (food presets loaded by the app)
 Include this in bug reports:
 ```
 java -version
-./mvnw -version
+mvn -version
 git rev-parse --short HEAD
-``` 
+```
