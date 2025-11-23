@@ -116,7 +116,7 @@ public class FoodCatalogService {
             return;
         }
 
-        Path docsPath = Path.of(DOCS_RESOURCE);
+        Path docsPath = resolveDocsPath();
         try (Workbook workbook = openWorkbook(docsPath)) {
             Sheet sheet = workbook.getNumberOfSheets() > 0 ? workbook.getSheetAt(0) : workbook.createSheet(DEFAULT_SHEET_NAME);
             ensureHeader(sheet);
@@ -175,7 +175,7 @@ public class FoodCatalogService {
     }
 
     private Resource resolveCatalogResource() {
-        Resource docsResource = new FileSystemResource(Path.of(DOCS_RESOURCE));
+        Resource docsResource = new FileSystemResource(resolveDocsPath());
         if (docsResource.exists()) {
             return docsResource;
         }
@@ -224,6 +224,10 @@ public class FoodCatalogService {
             }
         }
         return columns;
+    }
+
+    private Path resolveDocsPath() {
+        return Path.of(System.getProperty("user.dir"), DOCS_RESOURCE).normalize();
     }
 
     private int parseInt(Cell cell, DataFormatter formatter) {
