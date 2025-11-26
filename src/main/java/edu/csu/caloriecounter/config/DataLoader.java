@@ -14,11 +14,11 @@ import java.util.Random;
 /**
  * Configuration class that seeds example LogEntry data into the application repository at startup.
  *
- * <p>The {@link #seed(LogEntryRepository, FoodCatalogService)} method registers a
+ * The {@link #seed(LogEntryRepository, FoodCatalogService)} method registers a
  * {@link CommandLineRunner} bean that inserts a handful of entries for the current day using
  * the food catalog loaded from the Excel workbook. It also creates deterministic daily totals for
  * the previous 14 days. This class is intended to provide a small dataset for local development and
- * demonstration purposes while avoiding hard-coded meal descriptions.</p>
+ * demonstration purposes while avoiding hard-coded meal descriptions.
  *
  * Patterns Used So Far:
  * - MVC (Spring): Controllers ↔ Service ↔ Views (Thymeleaf)

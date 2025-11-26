@@ -3,9 +3,9 @@ package edu.csu.caloriecounter.domain;
 /**
  * Simple value object representing a catalog food item loaded from an external source.
  *
- * <p>Each instance holds the nutritional information necessary to pre-fill the quick add
+ * Each instance holds the nutritional information necessary to pre-fill the quick add
  * form: description, calories, protein, carbohydrates, fat, and the meal type the item
- * typically belongs to.</p>
+ * typically belongs to.
  */
 public class FoodItem {
     private final String description;

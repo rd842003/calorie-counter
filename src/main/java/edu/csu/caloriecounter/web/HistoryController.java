@@ -26,7 +26,7 @@ public class HistoryController {
     @GetMapping("/history")
     public String history(Model model, @RequestParam(defaultValue = "7") int days) {
         List<LogEntry> entries = service.lastNDays(days);
-        model.addAttribute("entries", entries);
+        model.addAttribute("history", entries);
         model.addAttribute("days", days);
         return "history";
     }
