@@ -22,11 +22,11 @@ import java.util.*;
 /**
  * Loads a catalog of foods from an Excel workbook and exposes them for UI pre-fill options.
  *
- * <p>The workbook is searched for in {@value #DOCS_RESOURCE} first (to make the spreadsheet easy to
+ * The workbook is searched for in {@value #DOCS_RESOURCE} first (to make the spreadsheet easy to
  * find and edit). If it is not present there, the service falls back to {@value #CLASSPATH_RESOURCE}
  * on the classpath. The sheet must contain a header row with the columns {@code Description},
  * {@code Calories}, {@code Protein}, {@code Carbs}, {@code Fat}, and {@code MealType}. Each
- * subsequent row is converted into a {@link FoodItem} instance.</p>
+ * subsequent row is converted into a {@link FoodItem} instance.
  */
 @Service
 public class FoodCatalogService {
@@ -104,8 +104,8 @@ public class FoodCatalogService {
     /**
      * Append a new food to the in-memory catalog and persist it to the Excel workbook on disk.
      *
-     * <p>The append is skipped when the description already exists (case-insensitive) to avoid
-     * duplicating rows in the spreadsheet.</p>
+     * The append is skipped when the description already exists (case-insensitive) to avoid
+     * duplicating rows in the spreadsheet.
      *
      * @param item the food to append
      */

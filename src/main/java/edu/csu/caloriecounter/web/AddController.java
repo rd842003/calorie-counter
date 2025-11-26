@@ -15,9 +15,9 @@ import java.util.Locale;
 /**
  * Controller responsible for the add/quick-add UI endpoints.
  *
- * <p>Provides the add form view, including preset food selections sourced from the Excel catalog,
+ * Provides the add form view, including preset food selections sourced from the Excel catalog,
  * and handles quick-add POSTs that create an entry for today using the
- * {@link LogService#addQuick} helper.</p>
+ * {@link LogService#addQuick} helper.
  */
 @Controller
 public class AddController {

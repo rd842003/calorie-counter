@@ -38,7 +38,12 @@ th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
 
 <div class="container">
   <div class="grid">
-    <div class="card" style="text-align:center">Search Foods (placeholder)</div>
+     <div class="card">
+      <div style="font-weight:600">Search Foods</div>
+      <p class="small">Start typing to filter the preset catalog.</p>
+      <label for="presetSearch">Search catalog</label>
+      <input id="presetSearch" type="search" placeholder="e.g., Chicken, Oats, Yogurt">
+    </div>
     <div class="card">
       <div style="font-weight:600">Quick Add</div>
       <div>
@@ -100,6 +105,7 @@ th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
   const carbsInput = document.getElementById('carbs');
   const fatInput = document.getElementById('fat');
   const mealTypeSelect = document.getElementById('mealType');
+  const presetSearch = document.getElementById('presetSearch');
 
   presetSelect.addEventListener('change', () => {
     const option = presetSelect.selectedOptions[0];
@@ -114,6 +120,31 @@ th,td{padding:8px 10px; border-bottom:1px solid #eaecef;}
     fatInput.value = option.dataset.fat || 0;
     if (option.dataset.meal) {
       mealTypeSelect.value = option.dataset.meal;
+    }
+  });
+
+    presetSearch.addEventListener('input', () => {
+    const term = presetSearch.value.trim().toLowerCase();
+    let firstMatch = null;
+
+    Array.from(presetSelect.options).forEach((option, index) => {
+      if (index === 0) {
+        option.hidden = false;
+        return;
+      }
+
+      const matches = option.value.toLowerCase().includes(term);
+      option.hidden = term !== '' && !matches;
+      if (matches && firstMatch === null) {
+        firstMatch = option;
+      }
+    });
+
+    if (term && firstMatch) {
+      presetSelect.value = firstMatch.value;
+      presetSelect.dispatchEvent(new Event('change'));
+    } else if (!term) {
+      presetSelect.selectedIndex = 0;
     }
   });
 </script>
