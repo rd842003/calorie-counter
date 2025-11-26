@@ -1,84 +1,83 @@
 # Calorie Counter — Assignment 6 (Spring Boot 3.3.3)
 
-This repo contains a minimal, runnable prototype for the A6 demo:
-- Spring Boot 3.3.3, Thymeleaf, Spring Data JPA, H2 (in‑memory)
-- Pages: **Dashboard** (`/dashboard`), **Add Food** (`/add`), **History** (`/history`)
-- Default port: **8080**
+## Purpose
+Calorie Counter is a Spring Boot 3.3.3 demo that tracks daily food intake. It provides a simple dashboard, food entry form, and history view backed by H2 and Spring Data JPA so you can explore CRUD patterns, Thymeleaf templating, and basic nutrition calculations in a single runnable project.
 
----
-
-## ✅ Quick Start (one command)
-
-This repo **does not include the Maven Wrapper**. Make sure Maven 3.9+ is installed and on your PATH.
-
-From the repo root run **ONE** of the following:
-```bash
-# Unix/macOS
-mvn spring-boot:run
-# Windows PowerShell/CMD
-mvn spring-boot:run
-```
-
-Then browse: http://localhost:8080
-
----
-
-## 📦 Requirements
-
-- **Java 17+** (Java 21 recommended).
-  Check:
+## Prerequisites
+- **Java 17+** (Java 21 recommended). Verify with:
   ```bash
   java -version
   ```
-  Expect something like `21.0.x`. If you see `1.8.x`, update your default Java.
+- **Maven 3.9+** on PATH (no Maven Wrapper in repo). Verify with:
+  ```bash
+  mvn -version
+  ```
+- Optional: VS Code with **Extension Pack for Java** and **Spring Boot Extension Pack**. Configure JDK 17+ under **Java: Configure Java Runtime**.
 
-- **Maven 3.9+** installed and on PATH: `mvn -version`
-
----
-
-## 🧰 VS Code setup (optional but helpful)
-
-1. Install extensions:
-   - *Extension Pack for Java*
-   - *Spring Boot Extension Pack*
-
-2. Ensure VS Code uses JDK 17+:
-   - Command Palette → **Java: Configure Java Runtime** → set your JDK 21 as default
-   - Or add `.vscode/settings.json` (see below)
-
-**Launch config** (green Run button):
-```jsonc
-// .vscode/launch.json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "Spring Boot - Calorie Counter",
-      "request": "launch",
-      "mainClass": "edu.csu.caloriecounter.Application",
-      "projectName": "calorie-counter"
-    }
-  ]
-}
+## Download
+Clone the repository and switch into it:
+```bash
+git clone <your-fork-or-clone-url>
+cd calorie-counter
 ```
 
-**Settings** (forces JDK 21 and uses it for Maven too):
-```jsonc
-// .vscode/settings.json
-{
-  "java.configuration.runtimes": [
-    { "name": "JavaSE-21", "path": "C:\\Program Files\\Java\\jdk-21", "default": true }
-  ],
-  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-21",
-  "maven.terminal.useJavaHome": true
-}
-```
+## Build / Configuration / Installation / Deployment
+- **Quick start (run locally):**
+  ```bash
+  mvn spring-boot:run
+  ```
+  Then open http://localhost:8080.
 
----
+- **Clean build (generates executable jar):**
+  ```bash
+  mvn clean package
+  ```
+  The jar appears under `target/` and can be run with `java -jar target/calorie-counter-*.jar`.
 
-## 🚀 Commands
+- **Port or property overrides:**
+  ```bash
+  mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
+  ```
+  Additional properties can be set in `src/main/resources/application.properties` or via `-Dspring-boot.run.arguments`.
 
+- **Database:** Uses in-memory H2; the console is available at http://localhost:8080/h2-console with JDBC URL `jdbc:h2:mem:caldb`.
+
+- **VS Code launch config (optional):**
+  ```jsonc
+  // .vscode/launch.json
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "Spring Boot - Calorie Counter",
+        "request": "launch",
+        "mainClass": "edu.csu.caloriecounter.Application",
+        "projectName": "calorie-counter"
+      }
+    ]
+  }
+  ```
+
+- **VS Code settings (force JDK 21):**
+  ```jsonc
+  // .vscode/settings.json
+  {
+    "java.configuration.runtimes": [
+      { "name": "JavaSE-21", "path": "C:\\Program Files\\Java\\jdk-21", "default": true }
+    ],
+    "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-21",
+    "maven.terminal.useJavaHome": true
+  }
+  ```
+
+## Usage
+- **Dashboard** (`/dashboard`): shows today’s totals and goal progress.
+- **Add Food** (`/add`): submit new food entries with name, calories, protein, carbs, and fat.
+- **History** (`/history`): review previous entries and totals.
+- **H2 Console**: http://localhost:8080/h2-console (JDBC `jdbc:h2:mem:caldb`).
+
+## Commands
 ```bash
 # run
 mvn spring-boot:run
@@ -90,10 +89,8 @@ mvn clean package
 mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
 ```
 
-## 🧪 Tests
-
+## Tests
 This project uses **JUnit 5** with the Spring Boot test starter. To run the full suite:
-
 ```bash
 # run all tests (recommended)
 mvn test
@@ -102,13 +99,9 @@ mvn test
 mvn -Dtest=LogServiceTest test
 ```
 
-H2 Console: http://localhost:8080/h2-console
-JDBC URL: `jdbc:h2:mem:caldb`
-
 ---
 
-## 🧩 Common issues
-
+## Common issues
 ### 1) “mvnw: command not found” or “mvnw is not recognized”
 This repo does not ship the Maven Wrapper scripts. Use `mvn` instead (Maven 3.9+ on PATH).
 If you want to add the wrapper locally:
@@ -138,10 +131,8 @@ Already fixed: controller precomputes `percent`; views avoid method calls.
 
 ---
 
-## 🧪 Environment check scripts (optional)
-
+## Environment check scripts (optional)
 We provide simple scripts to verify Java, Maven/Wrapper, and port status:
-
 - `scripts/env-check.ps1` (Windows PowerShell)
 - `scripts/env-check.sh` (macOS/Linux)
 
@@ -149,8 +140,7 @@ Run them from repo root; they will print helpful hints.
 
 ---
 
-## 📁 Layout
-
+## Layout
 ```
 src/main/java/edu/csu/caloriecounter/...
 src/main/resources/templates/
@@ -161,7 +151,7 @@ docs/food-catalog.xlsx (food presets loaded by the app)
 
 ---
 
-## 🙋 Help
+## Help
 Include this in bug reports:
 ```
 java -version
